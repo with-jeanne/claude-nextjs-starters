@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local json
 .claude/settings.local.json
+
+# hook test
+hook-test.txt

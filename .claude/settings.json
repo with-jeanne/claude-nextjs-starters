@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"테스트 훅!\" >> ./hook-test.txt"
+          }
+        ]
+      }
+    ]
+  }
+}
