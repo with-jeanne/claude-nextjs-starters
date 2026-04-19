@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
   Form,
   FormControl,
@@ -27,11 +26,10 @@ export default function LoginPage() {
     },
   })
 
-  const onSubmit = async (data: LoginInput) => {
+  const onSubmit = async (_: LoginInput) => {
     try {
-      console.log('로그인 시도:', data)
       toast.success('로그인 성공!')
-    } catch (error) {
+    } catch {
       toast.error('로그인에 실패했습니다')
     }
   }
@@ -48,7 +46,7 @@ export default function LoginPage() {
             <FormField
               control={form.control}
               name="email"
-              render={({ field }: any) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>이메일</FormLabel>
                   <FormControl>
@@ -62,7 +60,7 @@ export default function LoginPage() {
             <FormField
               control={form.control}
               name="password"
-              render={({ field }: any) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>비밀번호</FormLabel>
                   <FormControl>

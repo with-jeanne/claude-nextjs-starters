@@ -7,11 +7,7 @@ import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
-
-const links = [
-  { label: 'Home', href: '/' },
-  { label: 'Dashboard', href: '/dashboard' },
-]
+import { NAV_LINKS } from '@/components/header/nav-config'
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)
@@ -29,7 +25,7 @@ export function MobileNav() {
           <SheetTitle>Navigation</SheetTitle>
         </SheetHeader>
         <nav className="mt-6 flex flex-col gap-1">
-          {links.map(({ label, href }) => (
+          {NAV_LINKS.map(({ label, href }) => (
             <Link
               key={href}
               href={href}

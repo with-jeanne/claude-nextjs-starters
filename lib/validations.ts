@@ -18,3 +18,12 @@ export const registerSchema = loginSchema
   })
 
 export type RegisterInput = z.infer<typeof registerSchema>
+
+export const profileSchema = z.object({
+  name: z.string().min(2, '이름은 최소 2자 이상이어야 합니다'),
+  email: z.string().email('올바른 이메일 주소를 입력하세요'),
+  company: z.string().optional(),
+  bio: z.string().optional(),
+})
+
+export type ProfileInput = z.infer<typeof profileSchema>

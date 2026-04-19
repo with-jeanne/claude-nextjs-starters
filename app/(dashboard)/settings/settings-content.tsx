@@ -1,24 +1,62 @@
 'use client'
 
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Bell, Eye, Lock, User } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Textarea } from '@/components/ui/textarea'
 import { Container } from '@/components/layout/container'
 import { PageHeader } from '@/components/layout/page-header'
+import { profileSchema, type ProfileInput } from '@/lib/validations'
 import { toast } from 'sonner'
 
 export function SettingsContent() {
   const { theme, setTheme } = useTheme()
 
-  const handleSave = (tabName: string) => {
-    toast.success(`${tabName} 설정이 저장되었습니다`)
+  const [notifications, setNotifications] = useState({
+    email: true,
+    marketing: false,
+    push: true,
+    weekly: false,
+  })
+
+  const profileForm = useForm<ProfileInput>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: 'John Doe',
+      email: 'john@example.com',
+      company: '',
+      bio: '',
+    },
+  })
+
+  const onProfileSubmit = (_: ProfileInput) => {
+    toast.success('프로필 설정이 저장되었습니다')
+  }
+
+  const handleNotificationSave = () => {
+    toast.success('알림 설정이 저장되었습니다')
+  }
+
+  const handleAppearanceSave = () => {
+    toast.success('외관 설정이 저장되었습니다')
   }
 
   return (
@@ -48,37 +86,74 @@ export function SettingsContent() {
               <CardTitle>프로필 정보</CardTitle>
               <CardDescription>개인 정보를 관리하세요</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">이름</Label>
-                <Input id="name" placeholder="John Doe" defaultValue="John Doe" />
-              </div>
+            <CardContent>
+              <Form {...profileForm}>
+                <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-6">
+                  <FormField
+                    control={profileForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>이름</FormLabel>
+                        <FormControl>
+                          <Input placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className="space-y-2">
-                <Label htmlFor="email">이메일</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  defaultValue="john@example.com"
-                />
-              </div>
+                  <FormField
+                    control={profileForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>이메일</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="john@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className="space-y-2">
-                <Label htmlFor="company">회사</Label>
-                <Input id="company" placeholder="Your Company" />
-              </div>
+                  <FormField
+                    control={profileForm.control}
+                    name="company"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>회사</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your Company" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className="space-y-2">
-                <Label htmlFor="bio">소개</Label>
-                <textarea
-                  id="bio"
-                  placeholder="Tell us about yourself..."
-                  className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                />
-              </div>
+                  <FormField
+                    control={profileForm.control}
+                    name="bio"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>소개</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell us about yourself..."
+                            className="min-h-[100px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <Button onClick={() => handleSave('프로필')}>저장</Button>
+                  <Button type="submit" disabled={profileForm.formState.isSubmitting}>
+                    저장
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </TabsContent>
@@ -134,7 +209,7 @@ export function SettingsContent() {
                 </Select>
               </div>
 
-              <Button onClick={() => handleSave('외관')}>저장</Button>
+              <Button onClick={handleAppearanceSave}>저장</Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -152,7 +227,12 @@ export function SettingsContent() {
                   <Label className="text-base">이메일 알림</Label>
                   <p className="text-sm text-muted-foreground">중요한 업데이트를 이메일로 받습니다</p>
                 </div>
-                <Switch defaultChecked />
+                <Switch
+                  checked={notifications.email}
+                  onCheckedChange={(checked) =>
+                    setNotifications((prev) => ({ ...prev, email: checked }))
+                  }
+                />
               </div>
 
               <Separator />
@@ -162,7 +242,12 @@ export function SettingsContent() {
                   <Label className="text-base">마케팅 이메일</Label>
                   <p className="text-sm text-muted-foreground">새로운 기능과 프로모션 정보</p>
                 </div>
-                <Switch defaultChecked={false} />
+                <Switch
+                  checked={notifications.marketing}
+                  onCheckedChange={(checked) =>
+                    setNotifications((prev) => ({ ...prev, marketing: checked }))
+                  }
+                />
               </div>
 
               <Separator />
@@ -172,7 +257,12 @@ export function SettingsContent() {
                   <Label className="text-base">푸시 알림</Label>
                   <p className="text-sm text-muted-foreground">브라우저 푸시 알림 활성화</p>
                 </div>
-                <Switch defaultChecked />
+                <Switch
+                  checked={notifications.push}
+                  onCheckedChange={(checked) =>
+                    setNotifications((prev) => ({ ...prev, push: checked }))
+                  }
+                />
               </div>
 
               <Separator />
@@ -182,10 +272,15 @@ export function SettingsContent() {
                   <Label className="text-base">주간 요약</Label>
                   <p className="text-sm text-muted-foreground">매주 월요일 아침에 요약 발송</p>
                 </div>
-                <Switch defaultChecked={false} />
+                <Switch
+                  checked={notifications.weekly}
+                  onCheckedChange={(checked) =>
+                    setNotifications((prev) => ({ ...prev, weekly: checked }))
+                  }
+                />
               </div>
 
-              <Button onClick={() => handleSave('알림')}>저장</Button>
+              <Button onClick={handleNotificationSave}>저장</Button>
             </CardContent>
           </Card>
         </TabsContent>

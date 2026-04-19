@@ -28,12 +28,10 @@ export default function RegisterPage() {
     },
   })
 
-  const onSubmit = async (data: RegisterInput) => {
+  const onSubmit = async (_: RegisterInput) => {
     try {
-      const { confirmPassword, ...submitData } = data
-      console.log('회원가입 시도:', submitData)
       toast.success('회원가입이 완료되었습니다!')
-    } catch (error) {
+    } catch {
       toast.error('회원가입에 실패했습니다')
     }
   }
@@ -50,7 +48,7 @@ export default function RegisterPage() {
             <FormField
               control={form.control}
               name="name"
-              render={({ field }: any) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>이름</FormLabel>
                   <FormControl>
@@ -64,7 +62,7 @@ export default function RegisterPage() {
             <FormField
               control={form.control}
               name="email"
-              render={({ field }: any) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>이메일</FormLabel>
                   <FormControl>
@@ -78,7 +76,7 @@ export default function RegisterPage() {
             <FormField
               control={form.control}
               name="password"
-              render={({ field }: any) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>비밀번호</FormLabel>
                   <FormControl>
@@ -92,7 +90,7 @@ export default function RegisterPage() {
             <FormField
               control={form.control}
               name="confirmPassword"
-              render={({ field }: any) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>비밀번호 확인</FormLabel>
                   <FormControl>
