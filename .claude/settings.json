@@ -6,7 +6,28 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"테스트 훅!\" >> ./hook-test.txt"
+            "command": "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"⚙️ Bash 명령 실행됨: Claude Code에서 명령이 실행되었습니다\"}' $SLACK_WEBHOOK_URL 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"🔔 알림: Claude Code에서 알림이 발생했습니다\"}' $SLACK_WEBHOOK_URL 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{ read -r json; event=$(echo \"$json\" | jq -r '.hookEventName // \"Stop\"'); curl -X POST -H 'Content-type: application/json' --data \"{\\\"text\\\":\\\"⏹️ 작업 종료 ($event): Claude Code 작업이 완료되었습니다\\\"}\" $SLACK_WEBHOOK_URL; } 2>/dev/null || true"
           }
         ]
       }
