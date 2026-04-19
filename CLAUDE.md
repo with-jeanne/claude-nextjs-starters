@@ -6,11 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 모던 Next.js 스타터킷으로, 프로덕션 레벨의 웹 애플리케이션을 빠르게 구축하기 위한 템플릿입니다.
 
-- **Next.js 16** (App Router)
+- **Next.js 16.2.4** (App Router)
+- **React 19.2.4**
 - **TypeScript** (strict 모드)
-- **TailwindCSS v4** + **shadcn/ui**
+- **TailwindCSS v4** + **shadcn/ui** (CSS-first)
 - **next-themes** (다크모드 지원)
-- **React Hook Form** + **Zod** (폼 처리 및 검증)
+- **React Hook Form** + **Zod v4** (폼 처리 및 검증)
 
 ## 개발 명령어
 
@@ -18,8 +19,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev              # 개발 서버 실행 (localhost:3000)
 npm run build            # 프로덕션 빌드
 npm start                # 프로덕션 서버 실행
-npm run lint             # ESLint 실행 (전체)
-npm run lint --fix       # 자동 수정 가능한 문제 해결
+npm run lint             # ESLint 실행
+npx eslint --fix .       # 자동 수정 (lint --fix 사용 불가)
 ```
 
 **타입 체킹**: TypeScript strict 모드이므로 `npm run build` 전에 자동 검사됨. 개발 중 IDE 혹은 `tsc --noEmit` 명령으로 타입 오류 조기 발견 가능
@@ -32,14 +33,23 @@ npm run lint --fix       # 자동 수정 가능한 문제 해결
   - Route Groups 사용: `(main)`, `(dashboard)`, `(auth)` - 레이아웃 격리 및 그룹핑
   - 각 그룹은 독립적인 레이아웃 가능
   - 공통 레이아웃은 `app/layout.tsx`에 정의
+  - **에러 처리**: `app/error.tsx` (전역 에러 바운더리), `app/not-found.tsx` (404 페이지)
 
 - **components/** - React 컴포넌트
-  - `ui/` - shadcn/ui 기반 재사용 UI 컴포넌트 (button, card, input 등)
+  - `ui/` - shadcn/ui 기반 재사용 UI 컴포넌트 (button, card, input, sidebar, form 등 25개+)
   - `layout/` - 레이아웃 관련 컴포넌트 (container, section, page-header)
   - `header/` - 네비게이션 및 헤더 컴포넌트
-  - `dashboard/` - 대시보드 전용 컴포넌트
+    - `index.tsx` - 헤더 메인
+    - `nav-config.ts` - NAV_LINKS 메뉴 설정 (네비게이션 수정 시 이 파일 수정)
+    - `nav-links.tsx` - 데스크탑 링크 렌더러
+    - `mobile-nav.tsx` - 모바일 네비게이션
+    - `user-menu.tsx` - 사용자 드롭다운 메뉴
+  - `dashboard/` - 대시보드 전용 컴포넌트 (app-sidebar, dashboard-header, sidebar-nav)
   - `theme-toggle.tsx` - 다크모드 토글
   - `footer.tsx` - 푸터
+
+- **hooks/** - 커스텀 React 훅
+  - `use-mobile.ts` - `useIsMobile()` 훅 (768px breakpoint 기준 모바일 감지, SSR 안전)
 
 - **lib/** - 유틸리티 함수
   - `utils.ts` - 일반 유틸리티 (clsx, tailwind-merge 등)
@@ -79,10 +89,10 @@ shadcn/ui 기반으로, `components/ui/` 디렉토리에 모두 로컬 복사되
 마음껏 커스터마이징 가능합니다.
 
 ### ESLint 설정
-- **버전**: ESLint 9 + eslint-config-next
-- **규칙 파일**: `.eslintrc.json` (프로젝트 루트)
-- **무시 목록**: `.eslintignore`
-- **자동 수정**: `npm run lint --fix`로 가능
+- **버전**: ESLint 9 + eslint-config-next (flat config)
+- **설정 파일**: `eslint.config.mjs` (프로젝트 루트, ESLint 9 flat config 방식)
+- **무시 목록**: `eslint.config.mjs`의 `globalIgnores` 설정
+- **자동 수정**: `npx eslint --fix .` 명령어 사용
 - **IDE 연동**: VS Code ESLint 확장 프로그램 권장
 
 ## Next.js 16 주의사항
@@ -106,7 +116,12 @@ Next.js 16은 이전 버전과 큰 차이가 있습니다. 새로운 라우팅, 
 
 ## 스타일링
 
-- **TailwindCSS v4** 사용
+- **TailwindCSS v4** (CSS-first 방식)
+  - **설정 파일**: `tailwind.config.*` 없음 (CSS에서 직접 설정)
+  - **설정 방식**: `app/globals.css`에서 `@import "tailwindcss"` 직접 import
+  - **shadcn CSS**: `@import "shadcn/tailwind.css"` (globals.css)
+  - **애니메이션**: `@import "tw-animate-css"` (globals.css)
+  - **폰트**: Geist, Geist Mono (`next/font/google` 로드, CSS 변수 `--font-geist-sans`, `--font-geist-mono`)
 - **클래스 병합**: `tailwind-merge` 유틸리티로 클래스 충돌 해결
 - **조건부 클래스**: `clsx` 라이브러리 활용
 
@@ -116,6 +131,61 @@ Next.js 16은 이전 버전과 큰 차이가 있습니다. 새로운 라우팅, 
 - 모든 컴포넌트에 타입 명시
 - 클라이언트 컴포넌트는 `'use client'` 선언
 - 서버 컴포넌트가 기본 (필요할 때만 클라이언트화)
+
+## 서버/클라이언트 컴포넌트 분리 패턴
+
+폼이나 상호작용이 많은 페이지는 서버/클라이언트 경계를 명확히 분리합니다:
+
+**예: `(dashboard)/settings/page.tsx` 구조**
+```typescript
+// page.tsx - 서버 컴포넌트
+export const metadata = { title: '설정' }
+export default function SettingsPage() {
+  return <SettingsContent /> // 클라이언트 컴포넌트 import
+}
+
+// settings-content.tsx - 클라이언트 컴포넌트
+'use client'
+export function SettingsContent() {
+  // React Hook Form + Zod 폼 로직
+}
+```
+
+이렇게 분리하면 메타데이터는 서버에서, 폼 상호작용은 클라이언트에서 처리 가능합니다.
+
+## Claude 에이전트 시스템
+
+프로젝트에 통합된 자동화 도구들:
+
+### 커스텀 커맨드
+- **`/commit`** - Emoji + Conventional Commit 형식의 커밋 메시지 생성 (`.claude/commands/git/commit.md`)
+- **`/testcase`** - QA 테스트케이스 생성 (마크다운 형식)
+
+### 서브에이전트
+- **`code-reviewer`** (model: sonnet) - 코드 변경 후 자동 리뷰 (`code.changeReview.beforeCommit` 설정 가능)
+  - 10단계 검토: TypeScript, 컴포넌트 품질, 스타일링, 폼, 성능, 보안, 접근성, 테스트 등
+
+### Slack 알림 훅
+`.claude/settings.json`에 설정된 3가지 훅:
+- `PostToolUse[Bash]` - Bash 도구 실행 시 Slack 메시지
+- `Notification` - Claude Code 알림 발생 시 Slack 메시지
+- `Stop` - 작업 종료 시 Slack 메시지
+
+## 환경 변수
+
+**.env 파일 (선택사항, 훅 시스템 사용 시 필수)**
+```
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+```
+
+주의: `.env.example` 없음. 로컬 개발 시 `.env` 직접 생성 필요. `.gitignore`에 `.env` 포함되어 있음.
+
+## 테스트케이스
+
+QA 테스트케이스는 마크다운 형식으로 저장:
+- **위치**: `docs/testcases/` 디렉토리
+- **생성**: `/testcase 기능명` 커맨드로 생성 가능
+- **예**: `docs/testcases/dashboard.md` (24개 P0/P1/P2 테스트케이스)
 
 ## 개발 워크플로우
 
