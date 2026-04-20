@@ -17,13 +17,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run dev              # 개발 서버 실행 (localhost:3000)
-npm run build            # 프로덕션 빌드
+npm run build            # 프로덕션 빌드 (타입 체크 포함)
 npm start                # 프로덕션 서버 실행
-npm run lint             # ESLint 실행
-npx eslint --fix .       # 자동 수정 (lint --fix 사용 불가)
+npm run lint             # ESLint 현재 상태 확인
+npx eslint --fix .       # ESLint 자동 수정 (lint --fix 사용 불가)
+tsc --noEmit             # 타입 체킹만 수행 (빌드 없이)
 ```
 
-**타입 체킹**: TypeScript strict 모드이므로 `npm run build` 전에 자동 검사됨. 개발 중 IDE 혹은 `tsc --noEmit` 명령으로 타입 오류 조기 발견 가능
+**타입 체킹**: TypeScript strict 모드. `npm run build`는 자동 타입 검사를 포함합니다. 개발 중에는 `tsc --noEmit` 또는 IDE의 타입 체크를 활용하여 오류를 조기에 발견할 수 있습니다.
 
 ## 코드 구조
 
@@ -49,11 +50,11 @@ npx eslint --fix .       # 자동 수정 (lint --fix 사용 불가)
   - `footer.tsx` - 푸터
 
 - **hooks/** - 커스텀 React 훅
-  - `use-mobile.ts` - `useIsMobile()` 훅 (768px breakpoint 기준 모바일 감지, SSR 안전)
+  - `use-mobile.ts` - `useIsMobile()` 훅 (768px breakpoint 기준 모바일 감지, SSR 안전, 클라이언트 컴포넌트에서만 사용 가능)
 
 - **lib/** - 유틸리티 함수
-  - `utils.ts` - 일반 유틸리티 (clsx, tailwind-merge 등)
-  - `validations.ts` - Zod 스키마
+  - `utils.ts` - `cn()` 함수: Tailwind 클래스 병합 유틸리티 (clsx + tailwind-merge 조합). 조건부 스타일링에 사용: `cn("base-class", condition && "conditional-class")`
+  - `validations.ts` - Zod 스키마 (폼 검증 규칙)
 
 - **providers/** - React Context/Provider
   - `providers.tsx` - ThemeProvider, Sonner Toaster 등록
@@ -85,8 +86,14 @@ import { Button } from '@/components/ui/button'
 - **검증**: Zod 스키마로 클라이언트/서버 검증
 
 ### UI 컴포넌트
-shadcn/ui 기반으로, `components/ui/` 디렉토리에 모두 로컬 복사되어 있습니다.
-마음껏 커스터마이징 가능합니다.
+shadcn/ui 기반으로, `components/ui/` 디렉토리에 모두 로컬 복사되어 있습니다. 마음껏 커스터마이징 가능합니다.
+
+**컴포넌트 추가 방법:**
+```bash
+npx shadcn@latest add <component-name>
+# 예: npx shadcn@latest add dialog
+```
+새 컴포넌트는 `components/ui/` 디렉토리에 자동 설치되고, 필요시 수정하여 사용할 수 있습니다.
 
 ### ESLint 설정
 - **버전**: ESLint 9 + eslint-config-next (flat config)
@@ -122,8 +129,17 @@ Next.js 16은 이전 버전과 큰 차이가 있습니다. 새로운 라우팅, 
   - **shadcn CSS**: `@import "shadcn/tailwind.css"` (globals.css)
   - **애니메이션**: `@import "tw-animate-css"` (globals.css)
   - **폰트**: Geist, Geist Mono (`next/font/google` 로드, CSS 변수 `--font-geist-sans`, `--font-geist-mono`)
-- **클래스 병합**: `tailwind-merge` 유틸리티로 클래스 충돌 해결
-- **조건부 클래스**: `clsx` 라이브러리 활용
+- **클래스 병합**: `cn()` 유틸리티로 Tailwind 클래스 충돌 해결
+  ```typescript
+  import { cn } from '@/lib/utils'
+  
+  export function Button({ variant, className, ...props }) {
+    return (
+      <button className={cn('px-4 py-2', variant === 'primary' && 'bg-blue-500', className)} {...props} />
+    )
+  }
+  ```
+- **조건부 클래스**: `clsx` 라이브러리 활용 (cn 함수 내부에서 사용됨)
 
 ## 코딩 스타일
 
@@ -152,6 +168,32 @@ export function SettingsContent() {
 ```
 
 이렇게 분리하면 메타데이터는 서버에서, 폼 상호작용은 클라이언트에서 처리 가능합니다.
+
+## 커스텀 유틸리티 및 훅
+
+### cn() 함수
+`lib/utils.ts`의 `cn()` 함수는 Tailwind 클래스 병합 유틸리티입니다. Props로 받은 className이 기본 스타일을 덮어쓰는 상황을 방지합니다.
+
+```typescript
+import { cn } from '@/lib/utils'
+
+// Props로 받은 className이 기본 색상을 덮어씀
+<button className={cn('px-4 py-2 bg-blue-500', className)} />
+```
+
+### useIsMobile() 훅
+`hooks/use-mobile.ts`의 `useIsMobile()` 훅은 모바일 여부를 감지합니다. **클라이언트 컴포넌트에서만 사용 가능합니다.**
+
+```typescript
+'use client'
+import { useIsMobile } from '@/hooks/use-mobile'
+
+export function MyComponent() {
+  const isMobile = useIsMobile() // 768px 기준
+  
+  return isMobile ? <MobileLayout /> : <DesktopLayout />
+}
+```
 
 ## Claude 에이전트 시스템
 
@@ -199,7 +241,20 @@ QA 테스트케이스는 마크다운 형식으로 저장:
 2. `use client` 선언 (클라이언트 기능 필요시만)
 3. 타입 명시: Props 인터페이스 정의
 
+### 네비게이션 메뉴 수정
+네비게이션 링크 수정 시 `components/header/nav-config.ts` 파일의 `NAV_LINKS` 배열을 수정합니다. 다른 네비게이션 컴포넌트들이 이 설정을 참고합니다.
+
+```typescript
+// components/header/nav-config.ts
+export const NAV_LINKS = [
+  { label: '홈', href: '/' },
+  { label: '대시보드', href: '/dashboard' },
+  // 추가...
+]
+```
+
 ### 빌드 및 배포 전 체크리스트
 1. `npm run lint` - 린트 오류 확인 및 수정
-2. `npm run build` - 빌드 성공 확인 (타입 체크 포함)
-3. `npm run dev` - 개발 서버에서 기능 검증
+2. `tsc --noEmit` - 타입 오류 확인
+3. `npm run build` - 프로덕션 빌드 성공 확인
+4. `npm run dev` - 개발 서버에서 기능 검증
