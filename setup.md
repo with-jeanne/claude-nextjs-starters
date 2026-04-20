@@ -588,7 +588,7 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 **Step 4: Webhook URL 복사**
 1. 설정 페이지에서 **Webhook URL** 섹션 찾기
 2. "Copy" 버튼을 클릭하여 URL 복사
-   - 형식: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
+   - 형식: `https://hooks.slack.com/services/YOUR_TEAM_ID/YOUR_BOT_ID/YOUR_TOKEN`
 3. **Save Settings** 클릭
 
 ### .env 파일 설정
