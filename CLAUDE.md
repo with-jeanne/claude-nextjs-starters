@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Context
+
+- **PRD 문서**: @docs/PRD.md
+- **개발 로드맵**: @docs/ROADMAP.md
+
 ## 프로젝트 개요
 
 모던 Next.js 스타터킷으로, 프로덕션 레벨의 웹 애플리케이션을 빠르게 구축하기 위한 템플릿입니다.
