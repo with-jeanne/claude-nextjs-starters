@@ -655,6 +655,7 @@ cat .gitignore | grep ".env"
 | **context7** | HTTP | 라이브러리 문서/API | `https://mcp.context7.com/mcp` |
 | **sequential-thinking** | stdio | 단계별 사고 프로세스 | `npx @modelcontextprotocol/server-sequential-thinking` |
 | **shadcn** | stdio | shadcn/ui 컴포넌트 관리 | `npx shadcn@latest mcp` |
+| **shrimp-task-manager** | stdio | 작업 관리 및 추적 | `claude mcp add shrimp-task-manager` |
 
 ### MCP 서버 설정 파일
 
@@ -679,10 +680,16 @@ cat .gitignore | grep ".env"
     "shadcn": {
       "command": "npx",
       "args": ["shadcn@latest", "mcp"]
+    },
+    "shrimp-task-manager": {
+      "command": "npx",
+      "args": ["shrimp-task-manager"]
     }
   }
 }
 ```
+
+**참고**: `claude mcp add shrimp-task-manager` 명령어 실행 시 자동으로 설정이 추가됩니다.
 
 ### 새 Mac에서 MCP 서버 설정
 
@@ -700,6 +707,7 @@ cat .gitignore | grep ".env"
 - **context7**: 최신 라이브러리 문서 검색 (React, Next.js, Prisma 등)
 - **sequential-thinking**: 복잡한 문제 분석을 위한 단계별 추론
 - **shadcn**: shadcn/ui 컴포넌트 추가, 예제 검색, 사용법 조회
+- **shrimp-task-manager**: Claude Code 내에서 작업 관리 및 추적
 
 ---
 
