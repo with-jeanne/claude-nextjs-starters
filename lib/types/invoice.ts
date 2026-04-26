@@ -13,6 +13,8 @@ export interface Invoice {
   notion_page_id: string
   /** 견적서 제목 */
   title: string
+  /** 견적서 설명 (선택사항) */
+  description?: string
   /** 수신 클라이언트명 */
   client_name: string
   /** 합계 금액 */

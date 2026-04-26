@@ -1,0 +1,139 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - link "⬡ StarterKit" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: ⬡
+          - generic [ref=e8]: StarterKit
+        - generic [ref=e9]:
+          - navigation [ref=e10]:
+            - link "홈" [ref=e11] [cursor=pointer]:
+              - /url: /
+            - link "대시보드" [ref=e12] [cursor=pointer]:
+              - /url: /dashboard
+          - button "Switch to dark mode" [ref=e13]:
+            - img
+          - button "USER" [ref=e14]:
+            - generic [ref=e16]: USER
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e20]:
+          - heading "공통 컴포넌트 라이브러리 데모" [level=1] [ref=e21]
+          - paragraph [ref=e22]: Phase 2 UI 구현을 위한 재사용 가능한 컴포넌트들
+        - generic [ref=e24]:
+          - heading "상태 배지 (StatusBadge)" [level=2] [ref=e25]
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e28]: 초안
+              - generic [ref=e29]: draft
+            - generic [ref=e30]:
+              - generic [ref=e31]: 발송됨
+              - generic [ref=e32]: sent
+            - generic [ref=e33]:
+              - generic [ref=e34]: 확인됨
+              - generic [ref=e35]: confirmed
+        - generic [ref=e37]:
+          - heading "빈 상태 컴포넌트 (EmptyState)" [level=2] [ref=e38]
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - img [ref=e42]
+              - heading "견적서 없음" [level=3] [ref=e45]
+              - paragraph [ref=e46]: 아직 생성된 견적서가 없습니다. 첫 견적서를 만들어보세요.
+              - button "새 견적서 생성" [ref=e47]
+            - generic [ref=e48]:
+              - img [ref=e50]
+              - heading "동기화 필요" [level=3] [ref=e52]
+              - paragraph [ref=e53]: Notion에서 새로운 견적서를 확인할 수 있습니다.
+              - button "Notion 동기화" [ref=e54]
+        - generic [ref=e56]:
+          - heading "페이지 헤더 (PageHeader)" [level=2] [ref=e57]
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - heading "견적서 관리" [level=1] [ref=e60]
+              - paragraph [ref=e61]: Notion에서 동기화된 견적서 목록을 관리하고 클라이언트에게 공유하세요.
+            - button "Notion 동기화" [ref=e63]
+        - generic [ref=e65]:
+          - heading "더미 데이터 통계" [level=2] [ref=e66]
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: 총 견적서
+              - generic [ref=e70]: "10"
+              - generic [ref=e71]: 각 견적서는 고유 ID와 public_token 포함
+            - generic [ref=e72]:
+              - generic [ref=e73]: 총 항목
+              - generic [ref=e74]: "32"
+              - generic [ref=e75]: 모든 항목이 견적서에 링크됨
+            - generic [ref=e76]:
+              - generic [ref=e77]: 상태 분포
+              - generic [ref=e78]:
+                - generic [ref=e79]: "초안: 4개"
+                - generic [ref=e80]: "발송됨: 3개"
+                - generic [ref=e81]: "확인됨: 3개"
+        - generic [ref=e83]:
+          - heading "샘플 견적서 (더미 데이터)" [level=2] [ref=e84]
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - generic [ref=e87]:
+                - generic [ref=e88]:
+                  - heading "웹사이트 리디자인 프로젝트" [level=3] [ref=e89]
+                  - paragraph [ref=e90]: 쿠팡
+                - generic [ref=e91]: 발송됨
+              - generic [ref=e92]: ₩2,500,000
+              - generic [ref=e93]: "발행일: 2024. 4. 20."
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96]:
+                  - heading "모바일 앱 개발" [level=3] [ref=e97]
+                  - paragraph [ref=e98]: 배달의민족
+                - generic [ref=e99]: 초안
+              - generic [ref=e100]: ₩5,000,000
+              - generic [ref=e101]: "발행일: 2024. 4. 19."
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]:
+                  - heading "SEO 최적화 컨설팅" [level=3] [ref=e105]
+                  - paragraph [ref=e106]: 마켓컬리
+                - generic [ref=e107]: 확인됨
+              - generic [ref=e108]: ₩1,200,000
+              - generic [ref=e109]: "발행일: 2024. 4. 18."
+    - contentinfo [ref=e110]:
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - paragraph [ref=e115]: StarterKit
+            - paragraph [ref=e116]: 모던 Next.js 스타터킷으로 빠르게 웹 개발을 시작하세요.
+          - generic [ref=e117]:
+            - paragraph [ref=e118]: Product
+            - list [ref=e119]:
+              - listitem [ref=e120]:
+                - link "Home" [ref=e121] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e122]:
+                - link "Dashboard" [ref=e123] [cursor=pointer]:
+                  - /url: /dashboard
+          - generic [ref=e124]:
+            - paragraph [ref=e125]: Resources
+            - list [ref=e126]:
+              - listitem [ref=e127]:
+                - link "Next.js Docs" [ref=e128] [cursor=pointer]:
+                  - /url: https://nextjs.org/docs
+              - listitem [ref=e129]:
+                - link "shadcn/ui" [ref=e130] [cursor=pointer]:
+                  - /url: https://ui.shadcn.com
+        - generic [ref=e131]:
+          - paragraph [ref=e132]: © 2026 StarterKit. All rights reserved.
+          - generic [ref=e133]:
+            - link "GitHub" [ref=e134] [cursor=pointer]:
+              - /url: https://github.com
+              - img [ref=e135]
+            - link "Social" [ref=e139] [cursor=pointer]:
+              - /url: https://twitter.com
+              - img [ref=e140]
+            - link "Contact" [ref=e142] [cursor=pointer]:
+              - /url: https://linkedin.com
+              - img [ref=e143]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e151] [cursor=pointer]:
+    - img [ref=e152]
+  - alert [ref=e155]
