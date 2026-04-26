@@ -66,7 +66,7 @@ Invoice MVP는 **프리랜서/소규모 사업자(관리자)와 견적서를 받
 
 **목표**: 전체 라우트 구조와 빈 페이지, 타입 정의, DB 스키마 설계 완료
 
-- **Task 001: 프로젝트 구조 및 라우팅 설정** - 우선순위
+- **Task 001: 프로젝트 구조 및 라우팅 설정** ✅ 완료
   - 일정: 1~2일
   - 의존성: 없음
   - 관련 기능: 모든 F001~F011의 진입 페이지 골격
@@ -78,24 +78,27 @@ Invoice MVP는 **프리랜서/소규모 사업자(관리자)와 견적서를 받
     - `app/error.tsx`, `app/not-found.tsx` 오류/404 페이지 골격
     - 각 그룹별 `layout.tsx` 골격 (인증 상태별 분리)
     - 네비게이션 설정 파일(`components/header/nav-config.ts`)에 견적서 메뉴 반영
-- **Task 002: 타입 정의 및 데이터 모델 설계**
+  - **산출물**: `middleware.ts` (라우트 보호 미들웨어), 모든 페이지 기본 구조 완성
+- **Task 002: 타입 정의 및 데이터 모델 설계** ✅ 완료
   - 일정: 1일
   - 의존성: Task 001
   - 관련 기능: F001, F002, F003, F004, F011
   - 구현 사항:
-    - `types/invoice.ts`: Invoice, InvoiceItem, User TypeScript 인터페이스 정의
-    - `types/notion.ts`: Notion API 응답 타입 정의
+    - `lib/types/invoice.ts`: Invoice, InvoiceItem, User TypeScript 인터페이스 정의 (description 필드 추가)
+    - `lib/types/notion.ts`: Notion API 응답 타입 정의 + NOTION_INVOICE_PROPERTY_NAMES, NOTION_ITEM_PROPERTY_NAMES, NOTION_STATUS_MAP 상수
     - 견적서 상태 Enum 타입: `draft | sent | confirmed`
     - Supabase 데이터베이스 스키마 SQL 작성 (실제 마이그레이션은 Phase 3에서 적용)
-    - Zod 스키마 작성 (`lib/validations.ts`): 로그인/회원가입/견적서 입력 검증
-- **Task 003: 환경 변수 및 외부 연동 설계**
+    - Zod 스키마 작성 (`lib/validations.ts`): 로그인/회원가입/견적서 입력/동기화/공개 링크 검증
+  - **산출물**: `lib/types/invoice.ts`, `lib/types/notion.ts`, `lib/validations.ts`, Supabase 스키마 설계
+- **Task 003: 환경 변수 및 외부 연동 설계** ✅ 완료
   - 일정: 0.5일
   - 의존성: Task 002
   - 관련 기능: F001, F010
   - 구현 사항:
-    - `.env.example` 작성: `NOTION_API_KEY`, `NOTION_DATABASE_ID`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-    - 환경 변수 검증 유틸리티 (`lib/env.ts`)
-    - 패키지 설치 계획서 작성 (`@notionhq/client`, `@supabase/supabase-js`, `@supabase/ssr`, `@react-pdf/renderer`)
+    - `.env.example` 작성: `NOTION_API_KEY`, `NOTION_DATABASE_ID`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_APP_URL`
+    - 환경 변수 검증 유틸리티 (`lib/env.ts`): Zod 스키마 기반 빌드 타임/런타임 변수 검증
+    - 패키지 설치 계획서 (`docs/PACKAGES.md`): Phase별 설치 타이밍, 보안 주의사항
+  - **산출물**: `lib/env.ts`, `.env.example`, `docs/PACKAGES.md`
 
 ---
 
@@ -103,16 +106,19 @@ Invoice MVP는 **프리랜서/소규모 사업자(관리자)와 견적서를 받
 
 **목표**: 모든 페이지의 UI를 더미 데이터 기반으로 완성하여 사용자 플로우 검증 가능 상태로 만들기
 
-- **Task 004: 공통 컴포넌트 라이브러리 구현** - 우선순위
+- **Task 004: 공통 컴포넌트 라이브러리 구현** ✅ 완료
   - 일정: 2일
   - 의존성: Task 002
   - 관련 기능: F002, F004 (UI 기반)
   - 구현 사항:
-    - shadcn/ui 추가 컴포넌트 설치: `table`, `dialog`, `dropdown-menu`, `select`, `badge`, `toast(sonner)`
-    - 더미 데이터 생성 (`lib/mock-data.ts`): Invoice, InvoiceItem 샘플 10개
-    - 견적서 상태 Badge 컴포넌트 (`components/invoice/status-badge.tsx`)
-    - 공통 페이지 헤더, 빈 상태(Empty State) 컴포넌트
-    - 디자인 토큰 및 색상 시스템 정리 (`globals.css`)
+    - shadcn/ui 추가 컴포넌트 설치: `table`, `dialog`, `dropdown-menu`, `select`, `badge`, `toast(sonner)` ✅
+    - 더미 데이터 생성 (`lib/mock-data.ts`): Invoice 10개, InvoiceItem 32개 ✅
+    - 견적서 상태 Badge 컴포넌트 (`components/invoice/status-badge.tsx`) ✅
+    - 빈 상태(Empty State) 컴포넌트 (`components/layout/empty-state.tsx`) ✅
+    - 페이지 헤더 컴포넌트 (`components/layout/page-header.tsx`) ✅
+    - 디자인 토큰 및 색상 시스템 (globals.css) - 상태 배지, 테이블, 카드, 폼 스타일 ✅
+    - 컴포넌트 데모 페이지 (`app/(main)/components-demo/page.tsx`) ✅
+  - **산출물**: 모든 공통 컴포넌트 TypeScript strict 모드 통과, 렌더링 확인, Playwright 데모 페이지 검증 완료
 - **Task 005: 인증 페이지 UI 구현 (로그인/회원가입)**
   - 일정: 1.5일
   - 의존성: Task 004
@@ -325,7 +331,7 @@ Task 003 ──> Task 009 (Supabase) ──┬─> Task 010 (인증 구현)
 
 | Phase   | 기간            | 산출물                                      | 검증 기준                                      |
 | ------- | ------------- | ---------------------------------------- | ------------------------------------------ |
-| Phase 1 | 1주차 (3.5일)    | 라우팅 골격 + 타입 정의 + 환경 변수 설계                | 모든 페이지에 빈 컴포넌트 존재, `npm run build` 성공      |
+| Phase 1 | 1주차 (3.5일)    | ✅ 라우팅 골격 + 타입 정의 + 환경 변수 설계                | ✅ 모든 페이지에 빈 컴포넌트 존재, `npm run build` 성공      |
 | Phase 2 | 2주차 (7.5일)    | 더미 데이터 기반 전체 UI 완성                       | Playwright로 전체 페이지 네비게이션 가능, 사용자 플로우 시각 검증 |
 | Phase 3 | 3~4주차 (10.5일) | F001, F002, F003, F004, F010, F011 실제 동작 | E2E 시나리오(회원가입→동기화→공유→공개 페이지 접근) 통과         |
 | Phase 4 | 5주차 (4.5일)    | F005 PDF 다운로드 + 배포                       | Vercel 프로덕션 배포, 모든 기능 동작 검증                |
