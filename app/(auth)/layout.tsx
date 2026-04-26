@@ -6,8 +6,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-sm space-y-6">
         <div className="space-y-2 text-center">
           <Link href="/" className="flex items-center justify-center gap-2 font-semibold">
-            <span className="text-primary">⬡</span>
-            <span>StarterKit</span>
+            <span className="text-primary">◈</span>
+            <span>Invoice</span>
           </Link>
         </div>
         {children}

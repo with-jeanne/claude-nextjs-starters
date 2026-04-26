@@ -1,13 +1,17 @@
 'use client'
 
+/**
+ * 대시보드 사이드바 네비게이션
+ * Invoice MVP 메뉴 구조 반영
+ */
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BarChart3, Settings } from 'lucide-react'
+import { LayoutDashboard, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { label: 'Dashboard', href: '/dashboard', icon: BarChart3 },
-  { label: 'Settings', href: '/settings', icon: Settings },
+  { label: '견적서 관리', href: '/dashboard', icon: LayoutDashboard },
+  { label: '설정', href: '/settings', icon: Settings },
 ]
 
 export function SidebarNav() {

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "StarterKit — 모던 Next.js 웹 개발을 위한 완벽한 스타터",
-  description: "Next.js 16, TypeScript, TailwindCSS v4, shadcn/ui로 구성된 프로덕션 레벨 웹 스타터킷",
+  title: "Invoice — Notion 연동 견적서 공유 서비스",
+  description: "Notion에 입력한 견적서를 클라이언트에게 고유 링크로 공유하고 PDF로 저장하세요.",
 };
 
 export default function RootLayout({

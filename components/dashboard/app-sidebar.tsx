@@ -13,8 +13,8 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <Link href="/" className="flex items-center gap-2 font-semibold">
-          <span className="text-primary">⬡</span>
-          <span>StarterKit</span>
+          <span className="text-primary">◈</span>
+          <span>Invoice</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>

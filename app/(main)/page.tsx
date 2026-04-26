@@ -1,95 +1,87 @@
+/**
+ * 홈 페이지 (랜딩)
+ * 비로그인 접근 가능
+ * 로그인 상태: 대시보드로 유도
+ * 비로그인 상태: 로그인 페이지로 유도
+ */
 import Link from 'next/link'
-import { ArrowRight, Zap, Shield, Palette, Code, Globe, Terminal } from 'lucide-react'
+import { ArrowRight, FileText, Link2, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Section } from '@/components/layout/section'
 import { Container } from '@/components/layout/container'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'StarterKit — 모던 Next.js 스타터킷',
-  description: 'Next.js 16, TypeScript, TailwindCSS v4, shadcn/ui로 구성된 프로덕션 레벨 웹 스타터킷',
+  title: 'Invoice — Notion 연동 견적서 공유 서비스',
+  description: 'Notion에 입력한 견적서를 클라이언트에게 고유 링크로 공유하고 PDF로 저장하세요.',
 }
 
 const features = [
   {
-    icon: Zap,
-    title: '빠른 성능',
-    description: 'App Router와 Server Components로 최소한의 JS 번들.',
+    icon: FileText,
+    title: 'Notion 데이터 동기화',
+    description: 'Notion 데이터베이스에 입력한 견적서를 버튼 하나로 동기화합니다.',
   },
   {
-    icon: Palette,
-    title: '다크모드',
-    description: 'localStorage 지원 CSS 클래스 기반 다크모드.',
+    icon: Link2,
+    title: '고유 링크 생성',
+    description: '견적서마다 추측 불가능한 UUID 토큰 기반 공개 링크를 자동 생성합니다.',
   },
   {
-    icon: Shield,
-    title: '타입 안전',
-    description: 'TypeScript strict 모드로 완전한 타입 안전성.',
-  },
-  {
-    icon: Code,
-    title: 'shadcn/ui',
-    description: '아름답고 접근성 좋은 UI 컴포넌트 라이브러리.',
-  },
-  {
-    icon: Globe,
-    title: 'SEO 최적화',
-    description: 'Metadata API와 시맨틱 HTML로 기본 SEO 지원.',
-  },
-  {
-    icon: Terminal,
-    title: 'DX 중시',
-    description: '경로 별칭, ESLint, 체계적인 구조.',
+    icon: Download,
+    title: 'PDF 다운로드',
+    description: '클라이언트가 링크에 접속하여 바로 PDF로 저장할 수 있습니다.',
   },
 ]
 
 export default function HomePage() {
   return (
     <>
+      {/* 히어로 섹션 */}
       <Section className="text-center">
         <Container>
-          <Badge variant="secondary" className="mb-4">
-            v1.0 — 이제 사용 가능
-          </Badge>
-          <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
-            모던 Next.js 스타터로 더 빠르게 구축하세요
+          <h1 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
+            Notion 견적서를 클라이언트에게<br />바로 공유하세요
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-            필요한 모든 것이 준비되어 있습니다 — App Router, 다크모드, shadcn/ui 컴포넌트,
-            TypeScript, 그리고 Tailwind CSS v4.
+            이메일 첨부 방식은 그만. Notion에 입력한 견적서를 고유 링크로 공유하고
+            클라이언트가 PDF로 저장할 수 있게 합니다.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Button asChild size="lg">
-              <Link href="/dashboard">
-                대시보드 보기 <ArrowRight className="ml-2 size-4" />
+              <Link href="/login">
+                시작하기 <ArrowRight className="ml-2 size-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                GitHub
-              </a>
+              <Link href="/dashboard">
+                대시보드 보기
+              </Link>
             </Button>
           </div>
         </Container>
       </Section>
 
+      {/* 기능 소개 */}
       <Section className="bg-muted/30">
         <Container>
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold tracking-tight">모든 것이 준비되어 있습니다</h2>
+            <h2 className="text-3xl font-bold tracking-tight">어떻게 동작하나요?</h2>
             <p className="mt-3 text-muted-foreground">
-              신중하게 선별된 도구와 패턴의 완벽한 조합.
+              3단계로 견적서를 클라이언트에게 전달합니다.
             </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map(({ icon: Icon, title, description }) => (
+          <div className="grid gap-6 sm:grid-cols-3">
+            {features.map(({ icon: Icon, title, description }, idx) => (
               <Card key={title}>
                 <CardHeader>
                   <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10">
                     <Icon className="size-5 text-primary" />
                   </div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Step {idx + 1}
+                  </p>
                   <CardTitle className="text-base">{title}</CardTitle>
                   <CardDescription>{description}</CardDescription>
                 </CardHeader>
@@ -99,17 +91,16 @@ export default function HomePage() {
         </Container>
       </Section>
 
+      {/* CTA */}
       <Section>
         <Container>
           <div className="rounded-2xl bg-primary px-8 py-16 text-center text-primary-foreground">
-            <h2 className="text-3xl font-bold tracking-tight">준비가 되셨나요?</h2>
+            <h2 className="text-3xl font-bold tracking-tight">지금 바로 시작하세요</h2>
             <p className="mt-4 text-primary-foreground/80">
-              저장소를 복제하고 오늘 바로 다음 프로젝트를 시작하세요.
+              Notion 연동만 하면 견적서 공유 준비 완료.
             </p>
             <Button asChild variant="secondary" size="lg" className="mt-8">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                시작하기
-              </a>
+              <Link href="/login">무료로 시작하기</Link>
             </Button>
           </div>
         </Container>
