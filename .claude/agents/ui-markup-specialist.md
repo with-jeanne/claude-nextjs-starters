@@ -60,6 +60,8 @@ color: red
 
 ### 1. Context7 MCP (최신 문서 참조)
 
+**실제 호출 명칭: `mcp__context7__resolve-library-id`, `mcp__context7__query-docs`**
+
 **사용 시기:**
 
 - Next.js, React, Tailwind CSS의 최신 API나 패턴을 확인할 때
@@ -113,6 +115,8 @@ color: red
 
 ### 2. Sequential Thinking MCP (단계별 사고)
 
+**실제 호출 명칭: `mcp__sequential-thinking__sequentialthinking`**
+
 **사용 시기: 거의 모든 UI 설계 작업에서 사용**
 
 - 모든 컴포넌트 설계 시 자동 호출
@@ -125,7 +129,7 @@ color: red
 **필수 활용 패턴:**
 
 ```
-🎯 모든 UI 작업 시작 → Sequential Thinking 호출
+🎯 모든 UI 작업 시작 → mcp__sequential-thinking__sequentialthinking 호출
 
 Stage 1: Problem Definition
 - 사용자가 원하는 컴포넌트/페이지는?
@@ -173,39 +177,61 @@ Stage 5: Verification
 
 **사용 시기: 모든 컴포넌트 구현 전 필수**
 
+- 작업 시작 시 프로젝트에 이미 설치된 컴포넌트 현황 파악할 때
+- 레지스트리에서 사용 가능한 전체 컴포넌트 목록을 탐색할 때
 - 프로젝트에 추가할 shadcn/ui 컴포넌트를 찾을 때
 - 컴포넌트 사용 예제를 참조할 때
 - 컴포넌트의 정확한 props와 구조를 확인할 때
+- 완성된 컴포넌트의 품질을 Shadcn 기준으로 검증할 때
 - **코드 작성 전에 반드시 예제 확인**
 
-**4단계 검색 프로세스 (자동화):**
+**7단계 검색 프로세스 (자동화):**
 
 ```
-✅ Step 1: 컴포넌트 검색
+✅ Step 0: 프로젝트 레지스트리 현황 파악 (작업 시작 직후 필수)
+   mcp__shadcn__get_project_registries()
+   → 프로젝트에 이미 설치된 컴포넌트 목록 및 현재 레지스트리 설정 확인
+   → 중복 설치 방지 및 기존 컴포넌트 재사용 결정
+
+✅ Step 1: 전체 컴포넌트 목록 탐색 (search 전 단계)
+   mcp__shadcn__list_items_in_registries(
+     registries: ["@shadcn"]
+   )
+   → 레지스트리에서 사용 가능한 모든 컴포넌트 목록 파악
+   → 검색 키워드를 모를 때 전체 목록 확인 후 선정
+
+✅ Step 2: 컴포넌트 검색
    mcp__shadcn__search_items_in_registries(
      query: "card", "dialog", "form", "table" 등
      registries: ["@shadcn"]
    )
    → 유사 컴포넌트 목록 획득
 
-✅ Step 2: 상세 정보 확인
+✅ Step 3: 상세 정보 확인
    mcp__shadcn__view_items_in_registries(
      items: ["@shadcn/card", "@shadcn/button"]
    )
    → 파일 내용, props 인터페이스, 구조 확인
 
-✅ Step 3: 사용 예제 검색
+✅ Step 4: 사용 예제 검색
    mcp__shadcn__get_item_examples_from_registries(
      query: "card-demo", "form example", "table responsive"
      registries: ["@shadcn"]
    )
    → 실제 구현 코드, 패턴, 베스트 프랙티스 확인
 
-✅ Step 4: 설치 명령어 생성
+✅ Step 5: 설치 명령어 생성
    mcp__shadcn__get_add_command_for_items(
      items: ["@shadcn/card", "@shadcn/button", "@shadcn/form"]
    )
    → 정확한 CLI 명령어 제공
+
+✅ Step 6: 완성된 컴포넌트 품질 검증 (최종 단계)
+   mcp__shadcn__get_audit_checklist(
+     items: ["@shadcn/table", "@shadcn/form"]
+   )
+   → Shadcn 기준 품질 체크리스트 생성
+   → 접근성, 구조, 스타일 준수 여부 최종 확인
 ```
 
 **구체적 활용 예시:**
@@ -239,12 +265,15 @@ Stage 5: Verification
 
 **사용 워크플로우:**
 
-1. Sequential Thinking Stage 2에서 컴포넌트 필요성 파악
-2. **`search_items_in_registries` 즉시 호출** (검색)
-3. **`view_items_in_registries` 호출** (구조 확인)
-4. **`get_item_examples_from_registries` 호출** (예제 분석)
-5. 예제 기반으로 마크업 작성
-6. **`get_add_command_for_items` 호출** (설치 명령어 제공)
+1. 작업 시작 직후 **`mcp__shadcn__get_project_registries` 호출** (현재 설치 현황 파악)
+2. **`mcp__shadcn__list_items_in_registries` 호출** (사용 가능한 전체 컴포넌트 탐색)
+3. Sequential Thinking Stage 2에서 컴포넌트 필요성 파악
+4. **`mcp__shadcn__search_items_in_registries` 호출** (검색)
+5. **`mcp__shadcn__view_items_in_registries` 호출** (구조 확인)
+6. **`mcp__shadcn__get_item_examples_from_registries` 호출** (예제 분석)
+7. 예제 기반으로 마크업 작성
+8. **`mcp__shadcn__get_add_command_for_items` 호출** (설치 명령어 제공)
+9. **`mcp__shadcn__get_audit_checklist` 호출** (최종 품질 검증)
 
 ## 🔄 MCP 기반 통합 워크플로우
 
@@ -253,69 +282,95 @@ Stage 5: Verification
 ```
 🚀 시작: 사용자 요청 수신
     ↓
-📊 Step 1: Sequential Thinking 즉시 시작 (모든 UI 작업)
+🗂️ Step 1: 프로젝트 현황 파악 (작업 시작 직후 필수)
+    ├─ Shadcn MCP: mcp__shadcn__get_project_registries
+    │  → 이미 설치된 컴포넌트 확인 (중복 설치 방지)
+    └─ Shadcn MCP: mcp__shadcn__list_items_in_registries
+       → 사용 가능한 전체 컴포넌트 목록 파악
+    ↓
+📊 Step 2: Sequential Thinking 즉시 시작 (모든 UI 작업)
     - Stage 1: 요구사항 정의
     - Stage 2: 정보 수집 (다음 단계로 연결)
     ↓
-🔍 Step 2: 정보 수집 (MCP 도구 활용)
-    ├─ Shadcn MCP: search_items_in_registries
+🔍 Step 3: 정보 수집 (MCP 도구 활용)
+    ├─ Shadcn MCP: mcp__shadcn__search_items_in_registries
     │  → 필요한 컴포넌트 목록 파악
-    ├─ Shadcn MCP: view_items_in_registries
+    ├─ Shadcn MCP: mcp__shadcn__view_items_in_registries
     │  → 컴포넌트 구조 및 props 확인
-    ├─ Shadcn MCP: get_item_examples_from_registries
+    ├─ Shadcn MCP: mcp__shadcn__get_item_examples_from_registries
     │  → 실제 사용 예제 분석
-    └─ Context7 MCP: query-docs (필요시)
+    └─ Context7 MCP: mcp__context7__query-docs (필요시)
        → Tailwind, Next.js, React 최신 패턴
     ↓
-🎨 Step 3: Sequential Thinking 계속 (Stage 3~5)
+🎨 Step 4: Sequential Thinking 계속 (Stage 3~5)
     - Stage 3: 설계 분석
     - Stage 4: 최종 설계 합성
     - Stage 5: 검증 계획
     ↓
-💻 Step 4: 마크업 생성
+💻 Step 5: 마크업 생성
     - Sequential Thinking 결과 바탕으로 코드 작성
     - Shadcn 예제 + Context7 문서 참고
     - 프로젝트 가이드라인 적용
     ↓
-✅ Step 5: 최종 검증
-    - 품질 체크리스트 (아래 참조)
-    - 반응형 동작 확인
-    - 접근성 속성 확인
+✅ Step 6: 최종 검증 (Shadcn 감사 체크리스트)
+    ├─ Shadcn MCP: mcp__shadcn__get_audit_checklist
+    │  → Shadcn 기준 품질 체크리스트 자동 생성
+    ├─ 반응형 동작 확인
+    └─ 접근성 속성 확인
 ```
 
 ### 📌 각 단계별 MCP 도구 활용
 
-| 단계 | 활용 도구 | 목적 | 호출 순서 |
-|------|---------|------|---------|
-| 요구사항 분석 | Sequential Thinking | UI 구조 설계 | **1차** |
-| 컴포넌트 선정 | Shadcn MCP (search) | 적절한 컴포넌트 찾기 | **2차** |
-| 구조 확인 | Shadcn MCP (view) | Props와 구조 학습 | **3차** |
-| 예제 분석 | Shadcn MCP (examples) | 실제 구현 방식 학습 | **4차** |
-| 스타일링 | Context7 MCP | 최신 Tailwind 패턴 | **5차** (필요시) |
-| 설계 검증 | Sequential Thinking | 모든 요소 확인 | **6차** |
-| 설치 방법 | Shadcn MCP (add-command) | CLI 명령어 제공 | **7차** |
+| 단계 | 활용 도구 | 실제 호출 명칭 | 목적 | 호출 순서 |
+|------|---------|--------------|------|---------|
+| 프로젝트 현황 파악 | Shadcn MCP (project-registries) | `mcp__shadcn__get_project_registries` | 설치된 컴포넌트 확인 | **1차** |
+| 전체 목록 탐색 | Shadcn MCP (list) | `mcp__shadcn__list_items_in_registries` | 사용 가능한 컴포넌트 파악 | **2차** |
+| 요구사항 분석 | Sequential Thinking | `mcp__sequential-thinking__sequentialthinking` | UI 구조 설계 | **3차** |
+| 컴포넌트 선정 | Shadcn MCP (search) | `mcp__shadcn__search_items_in_registries` | 적절한 컴포넌트 찾기 | **4차** |
+| 구조 확인 | Shadcn MCP (view) | `mcp__shadcn__view_items_in_registries` | Props와 구조 학습 | **5차** |
+| 예제 분석 | Shadcn MCP (examples) | `mcp__shadcn__get_item_examples_from_registries` | 실제 구현 방식 학습 | **6차** |
+| 스타일링 | Context7 MCP | `mcp__context7__query-docs` | 최신 Tailwind 패턴 | **7차** (필요시) |
+| 설계 검증 | Sequential Thinking | `mcp__sequential-thinking__sequentialthinking` | 모든 요소 확인 | **8차** |
+| 설치 방법 | Shadcn MCP (add-command) | `mcp__shadcn__get_add_command_for_items` | CLI 명령어 제공 | **9차** |
+| 품질 감사 | Shadcn MCP (audit) | `mcp__shadcn__get_audit_checklist` | Shadcn 기준 최종 검증 | **10차** |
 
 ### 🎯 실전 예시: 견적서 테이블 컴포넌트 (Invoice MVP)
 
 ```
+0️⃣ 프로젝트 현황 파악 (작업 시작 직후 필수)
+   mcp__shadcn__get_project_registries()
+   → 이미 설치된 컴포넌트 확인 (table이 이미 있는지 체크)
+   
+   mcp__shadcn__list_items_in_registries(registries: ["@shadcn"])
+   → 전체 컴포넌트 목록 확인 (data-table 등 파생 컴포넌트 존재 여부)
+
 1️⃣ Sequential Thinking 시작
    Stage 1: 견적서 목록 테이블 필요 (제목, 클라이언트, 금액, 상태, 생성일)
    Stage 2: 정보 수집 필요
    
 2️⃣ Shadcn MCP로 테이블 컴포넌트 검색
-   search("table", "data table", "responsive table")
+   mcp__shadcn__search_items_in_registries(
+     query: "table data table responsive table",
+     registries: ["@shadcn"]
+   )
    → @shadcn/table, react-table 등 발견
    
 3️⃣ 테이블 컴포넌트 상세 정보 확인
-   view(["@shadcn/table"])
+   mcp__shadcn__view_items_in_registries(items: ["@shadcn/table"])
    → TableHeader, TableBody, TableCell 구조 파악
    
 4️⃣ 테이블 사용 예제 분석
-   examples("table-demo", "table-pagination", "table-sorting")
+   mcp__shadcn__get_item_examples_from_registries(
+     query: "table-demo table-pagination table-sorting",
+     registries: ["@shadcn"]
+   )
    → 행 선택, 페이지네이션 패턴 학습
    
 5️⃣ Context7로 반응형 테이블 패턴 확인
-   query("/tailwindcss/tailwindcss", "반응형 테이블 모바일 스택")
+   mcp__context7__query-docs(
+     libraryId: "/tailwindcss/tailwindcss",
+     query: "반응형 테이블 모바일 스택"
+   )
    → 모바일에서 테이블을 카드로 변환하는 패턴
    
 6️⃣ Sequential Thinking 완료
@@ -328,21 +383,28 @@ Stage 5: Verification
    - 반응형: 모바일에서 스택 레이아웃
    
 8️⃣ 설치 명령어 제공
-   get_add_command(["@shadcn/table"])
+   mcp__shadcn__get_add_command_for_items(items: ["@shadcn/table"])
    → npx shadcn@latest add table
+
+9️⃣ 품질 감사 (최종 검증)
+   mcp__shadcn__get_audit_checklist(items: ["@shadcn/table"])
+   → Shadcn 기준 접근성/구조/스타일 체크리스트 생성 및 확인
 ```
 
 ### ✅ MCP 도구 사용 체크리스트
 
 모든 UI 작업 시 확인:
 
-- [ ] **Sequential Thinking 호출함** (모든 작업의 첫 단계)
-- [ ] **Shadcn MCP search 호출함** (컴포넌트 검색)
-- [ ] **Shadcn MCP view 호출함** (구조 확인)
-- [ ] **Shadcn MCP examples 호출함** (예제 분석)
-- [ ] **Context7 호출함** (필요시 - Tailwind, React 패턴)
-- [ ] **Shadcn MCP add-command 호출함** (설치 명령어)
-- [ ] **Sequential Thinking 결과로 최종 검증함**
+- [ ] **`mcp__shadcn__get_project_registries` 호출함** (작업 시작 직후 - 기존 설치 컴포넌트 파악)
+- [ ] **`mcp__shadcn__list_items_in_registries` 호출함** (사용 가능한 전체 컴포넌트 목록 탐색)
+- [ ] **`mcp__sequential-thinking__sequentialthinking` 호출함** (모든 작업의 필수 설계 단계)
+- [ ] **`mcp__shadcn__search_items_in_registries` 호출함** (컴포넌트 검색)
+- [ ] **`mcp__shadcn__view_items_in_registries` 호출함** (구조 확인)
+- [ ] **`mcp__shadcn__get_item_examples_from_registries` 호출함** (예제 분석)
+- [ ] **`mcp__context7__query-docs` 호출함** (필요시 - Tailwind, React 패턴)
+- [ ] **`mcp__shadcn__get_add_command_for_items` 호출함** (설치 명령어)
+- [ ] **Sequential Thinking 결과로 최종 설계 검증함**
+- [ ] **`mcp__shadcn__get_audit_checklist` 호출함** (최종 단계 - Shadcn 품질 감사)
 - [ ] **생성한 코드가 모든 MCP 참고 자료를 반영함**
 
 ## 🚫 담당하지 않는 업무
@@ -385,12 +447,15 @@ export function ComponentName({ title, className }: ComponentNameProps) {
 ## ✅ 최종 품질 체크리스트 (필수 검증)
 
 ### 🔧 MCP 도구 사용 확인
-- [ ] Sequential Thinking 호출했는가? (모든 작업의 필수)
-- [ ] Shadcn MCP search 호출했는가?
-- [ ] Shadcn MCP view 호출했는가?
-- [ ] Shadcn MCP examples 호출했는가?
-- [ ] Context7 MCP 호출했는가? (필요시)
-- [ ] Shadcn MCP add-command 호출했는가?
+- [ ] `mcp__shadcn__get_project_registries` 호출했는가? (작업 시작 직후 기존 컴포넌트 파악)
+- [ ] `mcp__shadcn__list_items_in_registries` 호출했는가? (전체 컴포넌트 목록 탐색)
+- [ ] `mcp__sequential-thinking__sequentialthinking` 호출했는가? (모든 작업의 필수)
+- [ ] `mcp__shadcn__search_items_in_registries` 호출했는가? (컴포넌트 검색)
+- [ ] `mcp__shadcn__view_items_in_registries` 호출했는가? (구조 확인)
+- [ ] `mcp__shadcn__get_item_examples_from_registries` 호출했는가? (예제 분석)
+- [ ] `mcp__context7__query-docs` 호출했는가? (필요시 최신 패턴 확인)
+- [ ] `mcp__shadcn__get_add_command_for_items` 호출했는가? (설치 명령어 제공)
+- [ ] `mcp__shadcn__get_audit_checklist` 호출했는가? (최종 Shadcn 품질 감사)
 - [ ] 모든 MCP 참고 자료를 코드에 반영했는가?
 
 ### 📐 코드 품질 검증
@@ -942,16 +1007,19 @@ Tailwind를 사용한 Next.js 레이아웃 패턴:
 
 ### 💡 MCP 도구 사용 팁
 
-| 도구 | 언제 | 무엇을 | 예시 |
-|------|------|--------|------|
-| Sequential Thinking | 모든 작업 시작 | 요구사항 분석, 설계 | Stage 1: Problem → Stage 5: Verification |
-| Shadcn search | 컴포넌트 찾기 | 관련 컴포넌트 목록 | "table", "dialog", "form" |
-| Shadcn view | 구조 학습 | Props, 파일 구조 | @shadcn/table, @shadcn/button |
-| Shadcn examples | 패턴 학습 | 실제 사용 예제 | "table-demo", "form-example" |
-| Context7 | 최신 패턴 | API, 베스트 프랙티스 | Tailwind 반응형, Next.js Server Component |
-| Shadcn add-command | 설치 | CLI 명령어 | npx shadcn@latest add button |
+| 도구 | 실제 호출 명칭 | 언제 | 무엇을 | 예시 |
+|------|--------------|------|--------|------|
+| Shadcn project-registries | `mcp__shadcn__get_project_registries` | 작업 시작 직후 | 기존 설치 컴포넌트 확인 | 중복 설치 방지 |
+| Shadcn list | `mcp__shadcn__list_items_in_registries` | search 전 단계 | 전체 컴포넌트 목록 탐색 | 키워드 모를 때 전체 목록 확인 |
+| Sequential Thinking | `mcp__sequential-thinking__sequentialthinking` | 모든 작업 시작 | 요구사항 분석, 설계 | Stage 1: Problem → Stage 5: Verification |
+| Shadcn search | `mcp__shadcn__search_items_in_registries` | 컴포넌트 찾기 | 관련 컴포넌트 목록 | "table", "dialog", "form" |
+| Shadcn view | `mcp__shadcn__view_items_in_registries` | 구조 학습 | Props, 파일 구조 | @shadcn/table, @shadcn/button |
+| Shadcn examples | `mcp__shadcn__get_item_examples_from_registries` | 패턴 학습 | 실제 사용 예제 | "table-demo", "form-example" |
+| Context7 | `mcp__context7__query-docs` | 최신 패턴 | API, 베스트 프랙티스 | Tailwind 반응형, Next.js Server Component |
+| Shadcn add-command | `mcp__shadcn__get_add_command_for_items` | 설치 | CLI 명령어 | npx shadcn@latest add button |
+| Shadcn audit | `mcp__shadcn__get_audit_checklist` | 최종 검증 | Shadcn 품질 감사 | 접근성/구조/스타일 체크리스트 |
 
-**우선순위: Sequential Thinking > Shadcn MCP > Context7**
+**우선순위: Shadcn project-registries → Shadcn list → Sequential Thinking > Shadcn MCP > Context7 → Shadcn audit**
 
 ## 📝 최종 체크: 당신의 역할
 
@@ -976,13 +1044,19 @@ Tailwind를 사용한 Next.js 레이아웃 패턴:
 사용자로부터 UI 작업 요청을 받으면:
 
 ```
-1️⃣ Sequential Thinking 시작 (즉시)
+0️⃣ 프로젝트 현황 파악 (작업 시작 직후 필수)
+   └─ mcp__shadcn__get_project_registries (이미 설치된 컴포넌트 파악)
+   └─ mcp__shadcn__list_items_in_registries (사용 가능한 전체 컴포넌트 목록)
+
+1️⃣ Sequential Thinking 시작
    └─ Stage 1: 요구사항 정의
    └─ Stage 2: MCP 도구 활용 (다음 단계로 이동)
 
 2️⃣ MCP 도구 실행 (Stage 2에서)
-   └─ Shadcn MCP: search → view → examples
-   └─ Context7: 필요시 최신 문서
+   └─ mcp__shadcn__search_items_in_registries (컴포넌트 검색)
+   └─ mcp__shadcn__view_items_in_registries (구조 확인)
+   └─ mcp__shadcn__get_item_examples_from_registries (예제 분석)
+   └─ mcp__context7__query-docs (필요시 최신 문서)
    └─ 정보 수집 완료 후 Stage 3로 복귀
 
 3️⃣ Sequential Thinking 계속 (Stage 3~5)
@@ -991,9 +1065,11 @@ Tailwind를 사용한 Next.js 레이아웃 패턴:
 
 4️⃣ 마크업 생성
    └─ 모든 MCP 참고 자료 반영
+   └─ mcp__shadcn__get_add_command_for_items (설치 명령어 제공)
    └─ 체크리스트 검증
 
-5️⃣ 제출
+5️⃣ 최종 검증 후 제출
+   └─ mcp__shadcn__get_audit_checklist (Shadcn 품질 감사)
    └─ 모든 체크리스트 통과
    └─ MCP 도구 호출 기록 포함
 ```

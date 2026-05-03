@@ -204,3 +204,55 @@
     @apply bg-blue-50 text-blue-900 dark:bg-blue-950 dark:text-blue-200;
   }
 }
+
+/* 견적서 공개 페이지 인쇄 최적화 (@media print) */
+@media print {
+  /* 페이지 여백 및 크기 설정 (A4 기준) */
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+
+  /* 배경 및 기본 색상 초기화 */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* 색상 정확도 보정 (Chrome, Safari 인쇄 시 배경색 유지) */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 페이지 분할 방지: 견적서 전체 */
+  article {
+    page-break-inside: avoid;
+  }
+
+  /* 페이지 분할 방지: 품목 테이블 */
+  table {
+    page-break-inside: avoid;
+  }
+
+  /* 페이지 분할 방지: 테이블 행 */
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  /* 테이블 헤더 각 페이지마다 반복 */
+  thead {
+    display: table-header-group;
+  }
+
+  /* 합계 영역 페이지 분할 방지 */
+  tfoot {
+    display: table-footer-group;
+  }
+
+  /* 링크 URL 표시 방지 */
+  a[href]::after {
+    content: none !important;
+  }
+}
